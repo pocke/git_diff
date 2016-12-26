@@ -1,6 +1,5 @@
 module GitDiff
   class File
-
     attr_reader :a_path, :a_blob, :b_path, :b_blob, :b_mode, :hunks
 
     def self.from_string(string)

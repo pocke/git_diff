@@ -57,4 +57,13 @@ class DiffFileTest < Minitest::Test
     assert_equal 1, @file.stats.number_of_deletions
   end
 
+  def test_binary_diff_is_correctly_extracted
+    @file << "index cd273ed..0a31db0 100644"
+    @file << "Binary files a/bar and b/foo differ"
+
+    assert_equal 0, @file.hunks.count
+    assert_equal true, @file.binary?
+    assert_equal 'bar', @file.a_path
+    assert_equal 'foo', @file.b_path
+  end
 end

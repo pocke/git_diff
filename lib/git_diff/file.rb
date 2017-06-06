@@ -11,6 +11,7 @@ module GitDiff
 
     def initialize
       @hunks = []
+      @binary = false
     end
 
     def <<(string)
@@ -18,6 +19,10 @@ module GitDiff
 
       if(range_info = RangeInfo.from_string(string))
         add_hunk Hunk.new(range_info)
+      elsif (binary_info = string.match(/^Binary files (.+) and (.+) differ$/))
+        @a_path = binary_info[1] == '/dev/null' ? '/dev/null' : binary_info[1].sub('a/', '')
+        @b_path = binary_info[2] == '/dev/null' ? '/dev/null' : binary_info[2].sub('b/', '')
+        @binary = true
       else
         append_to_current_hunk string
       end
@@ -25,6 +30,10 @@ module GitDiff
 
     def stats
       @stats ||= Stats.total(collector)
+    end
+
+    def binary?
+      @binary
     end
 
     private

@@ -64,9 +64,12 @@ module GitDiff
       when b_path_info = /^[+]{3} b\/(.*)$/.match(string)
         @b_path = b_path_info[1]
       when blob_info = /^index ([0-9A-Fa-f]+)\.\.([0-9A-Fa-f]+) ?(.+)?$/.match(string)
-        @a_blob, @b_blob, @b_mode = *blob_info.captures
-      when /^new file mode [0-9]{6}$/.match(string)
+        @a_blob, @b_blob, b_mode = *blob_info.captures
+        @b_mode = b_mode if b_mode
+        true
+      when new_file_info = /^new file mode ([0-9]{6})$/.match(string)
         @a_path = "/dev/null"
+        @b_mode = new_file_info[1]
       when /^deleted file mode [0-9]{6}$/.match(string)
         @b_path = "/dev/null"
       end

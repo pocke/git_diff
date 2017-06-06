@@ -66,4 +66,11 @@ class DiffFileTest < Minitest::Test
     assert_equal 'bar', @file.a_path
     assert_equal 'foo', @file.b_path
   end
+
+  def test_new_file_mode
+    @file << "new file mode 100644"
+    @file << "index 0000000..500aa29"
+
+    assert_equal "100644", @file.b_mode
+  end
 end
